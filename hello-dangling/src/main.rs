@@ -15,3 +15,11 @@ enum Cereals {
     Spelt,
     Wheat,
 }
+
+fn race_condition() {
+    let mut data = 100;
+    std::thread::spawn(|| { data = 500; });
+    std::thread::spawn(|| { data = 1000; });
+
+    println!("{}", data);
+}
