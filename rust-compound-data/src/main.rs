@@ -20,7 +20,7 @@ fn main() {
 
     let text = String::from_utf8_lossy(&buffer);
 
-    println!("{:?}", f2);
+    println!("{}", f2);
     println!("{} is {} bytes long", &f2.name, f_length.unwrap());
     println!("{}", text);
 }
