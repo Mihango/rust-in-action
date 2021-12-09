@@ -1,6 +1,6 @@
 #![allow(unused_variables)]
-use std::vec;
 use rand::prelude::*;
+use std::{vec, ptr::read, fmt::Display};
 
 fn main() {
     // let mut f2 = File {
@@ -25,10 +25,17 @@ fn main() {
     println!("{}", text);
 }
 
+#[derive(Debug, PartialEq)]
+enum FileState {
+    Open,
+    Closed,
+}
+
 #[derive(Debug)]
 struct File {
     name: String,
     data: Vec<u8>,
+    state: FileState,
 }
 
 impl File {
@@ -36,6 +43,7 @@ impl File {
         File {
             name: String::from(name),
             data: Vec::new(),
+            state: FileState::Closed,
         }
     }
 
@@ -50,31 +58,63 @@ impl File {
     }
 
     fn read(self: &File, save_to: &mut Vec<u8>) -> Result<usize, String> {
+        if self.state != FileState::Open {
+            return Err(String::from("File must be open for reading"));
+        }
+
         let mut tmp = self.data.clone();
         let read_length = tmp.len();
-    
+
         save_to.reserve(read_length);
         save_to.append(&mut tmp);
         Ok(read_length)
     }
 }
 
-fn open(f: File) -> Result<File, String> {
-    if one_in(10_000){
-        let err_msg = String::from("Permisssion denied");
-        return Err(err_msg);
-    }
+fn open(mut f: File) -> Result<File, String> {
+    // if one_in(10_000){
+    //     let err_msg = String::from("Permisssion denied");
+    //     return Err(err_msg);
+    // }
+    f.state = FileState::Open;
     Ok(f)
 }
 
-fn close(f: File) -> Result<File, String> {
-    if one_in(100_000) {
-        let err_msg = String::from("Interrupted by signal!");
-        return Err(err_msg);
-    }
+fn close(mut f: File) -> Result<File, String> {
+    // if one_in(100_000) {
+    //     let err_msg = String::from("Interrupted by signal!");
+    //     return Err(err_msg);
+    // }
+    f.state = FileState::Closed;
     Ok(f)
 }
 
 fn one_in(denominator: u32) -> bool {
     thread_rng().gen_ratio(1, denominator)
+}
+
+// implementing traits on file
+trait Read {
+    fn read(self: &Self, save_to: &mut Vec<u8>) -> Result<usize, String>;
+}
+
+impl Read for File {
+    fn read(self: &Self, save_to: &mut Vec<u8>) -> Result<usize, String> {
+        Ok(0)
+    }
+}
+
+impl Display for FileState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            FileState::Open => write!(f, "OPEN"),
+            FileState::Closed => write!(f, "CLOSED"),
+        }
+    }
+}
+
+impl Display for File {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<{} ({})>", self.name, self.state)
+    }
 }
