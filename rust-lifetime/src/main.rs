@@ -2,18 +2,28 @@
 
 fn main() {
     let base = GroundStation {};
-    let mut sat_a = CubeSat::new(0);
+    let sat_ids = find_sat_ids();
 
-    println!("t0: {:?}", sat_a);
+    for sat_id in sat_ids {
+        let mut sat = base.connect(sat_id);
+        base.send(&mut sat, Message::from("Hello Sat"));
 
-    base.send(&mut sat_a, Message::from("Hello there!"));
-    println!("t1: {:?}", sat_a);
+        println!("t0: {:?}", sat);
+
+        base.send(&mut sat, Message::from("Hello there!"));
+        println!("t1: {:?}", sat);
     
-    let msg = sat_a.recv();
+        let msg = sat.recv();
+    
+        println!("t2: {:?}", sat);
+    
+        println!("msg: {:?}", msg);
+    }
+}
 
-    println!("t2: {:?}", sat_a);
-
-    println!("msg: {:?}", msg);
+// acts like a db access of sat ids
+fn find_sat_ids() -> Vec<u64> {
+    vec![1, 2, 3]
 }
 
 #[derive(Debug)]
@@ -41,6 +51,7 @@ impl CubeSat {
         }
     }
 
+    // using references to solve ownership issue
     fn recv(&mut self) -> Option<Message> {
         self.mailbox.messages.pop()
     }
@@ -50,4 +61,9 @@ impl GroundStation {
     fn send(&self, to: &mut CubeSat, msg: Message) {
         to.mailbox.messages.push(msg);
     }
+
+    fn connect(&self, sat_id: u64) -> CubeSat {
+        CubeSat::new(sat_id)
+    }
 }
+
