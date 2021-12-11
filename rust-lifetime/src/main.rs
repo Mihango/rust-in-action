@@ -1,8 +1,8 @@
 #![allow(unused)]
 fn main() {
-    let sat_a = CubeSat { id: 0 };
-    let sat_b = CubeSat { id: 1 };
-    let sat_c = CubeSat { id: 2 };
+    let sat_a = CubeSat { id: 0, mail_box: MailBox { messages: vec![]} };
+    let sat_b = CubeSat { id: 1, mail_box: MailBox { messages: vec![]}  };
+    let sat_c = CubeSat { id: 2, mail_box: MailBox { messages: vec![]}  };
 
     let sat_a = check_status(sat_a);
     let sat_b = check_status(sat_b);
@@ -15,6 +15,7 @@ fn main() {
     let c_status = check_status(sat_c);
 
     // println!("a: {:?}, b: {:?}, c: {:?}", a_status, b_status, c_status);
+    test_communication();
 }
 
 fn drop_item<T>(_item: T) {}
@@ -36,19 +37,59 @@ fn test_primitives_borrow() {
     // String struct does not implement Copy and has already moved
 }
 
-#[derive(Debug)]
-enum StatusMessage {
-    Ok,
-}
-
 // return the borrowed item
 fn check_status(sat_id: CubeSat) -> CubeSat {
     println!("{:?}: {:?}", sat_id, StatusMessage::Ok);
     sat_id
 }
 
+#[derive(Debug)]
+enum StatusMessage {
+    Ok,
+}
+
 // can derive Clone and Copy
 #[derive(Debug)]
 struct CubeSat {
-    id: u64
+    id: u64,
+    mail_box: MailBox,
+}
+
+impl CubeSat {
+    fn recv(&mut self) -> Option<Message> {
+        self.mail_box.pop()
+    }
+}
+
+#[derive(Debug)]
+struct MailBox {
+    messages: Vec<Message>
+}
+
+impl MailBox {
+    fn add_message(&mut self, message: Message) {
+        self.messages.push(message);
+    }
+
+    fn pop(&mut self) -> Option<Message> {
+        self.messages.pop()
+    }
+}
+
+type Message = String;
+
+struct GroundStation;
+
+impl GroundStation {
+    fn send(&self, cube_sat: &mut CubeSat, message: Message) {
+        cube_sat.mail_box.add_message(message);
+    }
+}
+
+fn test_communication() {
+    let mut sat_a = CubeSat { id: 0, mail_box: MailBox { messages: vec![]} };
+    let base = GroundStation{};
+    base.send(&mut sat_a, "hello!".to_string());
+    let msg = sat_a.recv();
+    println!("sat_a received: {:?}", msg);  // - Option("hello!")
 }
