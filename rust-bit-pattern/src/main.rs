@@ -5,6 +5,16 @@ mod lib;
 use std::slice::from_ref;
 
 fn main() {
+    // shift
+    let x = 2_i16;
+    let y = x << 1;
+    let z = x << 2;
+    let a = x << 3;
+    println!("{:016b} == x = {:016b} == {}", x, x, x);
+    println!("{:016b} << 1 = {:016b} == {}", x, y, y);
+    println!("{:016b} << 1 = {:016b} == {}", x, z, z);
+    println!("{:016b} << 1 = {:016b} == {}", x, a, a);
+
     sample_integers();
 
     let (a, b) = (200, 200);
