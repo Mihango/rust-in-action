@@ -1,5 +1,7 @@
 #![allow(unused)]
 
+mod lib;
+
 use std::slice::from_ref;
 
 fn main() {
