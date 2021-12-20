@@ -1,5 +1,7 @@
 #![allow(unused)]
 
+pub mod raw_pointers;
+
 use std::{mem::size_of, borrow::Cow};
 use std::ffi::CStr;
 use std::os::raw::c_char;
@@ -12,7 +14,11 @@ fn main() {
 
     // smart_pointers();
 
-    memory_address_layout();
+    // memory_address_layout();
+
+    raw_pointers::reference_coercion_to_value();
+    raw_pointers::derefencing_pointer();
+    raw_pointers::create_raw_pointer();
 }
 
 // pointers
