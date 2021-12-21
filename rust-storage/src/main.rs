@@ -1,4 +1,5 @@
 use serde::Serialize;
+use serde_json::to_string as to_json;
 
 
 fn main() {
@@ -10,6 +11,8 @@ fn main() {
     };
 
     println!("City: {:?}", nairobi);
+
+    let as_json = to_json(&nairobi).unwrap();
 }
 
 
