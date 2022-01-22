@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 use std::{error::Error, };
 use reqwest;
  
@@ -11,8 +11,4 @@ async fn main() -> Result<(), Box<dyn Error>> {
     println!("{}", content);
 
     Ok(())
-=======
-fn main() {
-    println!("Hello, world!");
->>>>>>> 0e60756304c9a06731c322df002baf47667e5b24
 }
