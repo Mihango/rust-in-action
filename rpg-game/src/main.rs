@@ -1,4 +1,4 @@
-use rand::{self, random, Rng, prelude::SliceRandom};
+use rand::{self, Rng, prelude::SliceRandom};
 
 #[derive(Debug)]
 struct Dwarf {}
