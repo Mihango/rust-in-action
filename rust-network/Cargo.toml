@@ -6,5 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+<<<<<<< HEAD
 reqwest = "0.11.9"
 tokio = { version = "1.15.0", features = ["full"] }
+=======
+reqwest = "0.11.9"
+>>>>>>> 0e60756304c9a06731c322df002baf47667e5b24
